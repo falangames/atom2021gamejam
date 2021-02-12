@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19288bef98cebff429777dcc5c2d64c0, type: 3}
+  m_Name: Monkey Character
+  m_EditorClassIdentifier: 
+  characterName: Monkey
+  startingHp: 100
+  sprite: {fileID: 21300000, guid: 1231d69e796f07f4baef43067cb62de3, type: 3}
+  animator: {fileID: 0}
+  isJump: 1
+  isFly: 0
+  isSwim: 0
+  isActive: 1
+  characterPickCooldown: 1
+  characterAbilities:
+  - {fileID: 11400000, guid: e59e393e5d777fe41af81e6e4d6db425, type: 2}

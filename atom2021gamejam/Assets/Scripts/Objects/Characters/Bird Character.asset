@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0af47f637515564f9ed0071670e4ca7, type: 3}
+  m_Name: Bird Character
+  m_EditorClassIdentifier: 
+  characterName: Bird
+  startingHp: 100
+  sprite: {fileID: 21300000, guid: a0e44e5ef970cdf4abeaf7fd3c9630bd, type: 3}
+  animator: {fileID: 0}
+  isJump: 0
+  isFly: 1
+  isSwim: 0
+  isActive: 0
+  characterPickCooldown: 1
+  characterAbilities:
+  - {fileID: 11400000, guid: 20f9a07772fb73e4cabddfa387991f1f, type: 2}
