@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class CharacterController : MonoBehaviour
 {
@@ -98,7 +99,7 @@ public class CharacterController : MonoBehaviour
             }
         }*/
 
-
+    public static CharacterController Instance;
 
     public float speed;
     public float jumpForce;
@@ -111,15 +112,17 @@ public class CharacterController : MonoBehaviour
     public Character[] characters;
 
 
-    private bool isGrounded = false;
-    private string currentCharacter = "Monkey";
-    private Rigidbody2D rigidbody2D;
-    private SpriteRenderer renderer;
-    private float horizontal;
-    private float vertical;
+    public bool isGrounded = false;
+    public string currentCharacter = "Monkey";
+    public Rigidbody2D rigidbody2D;
+    public SpriteRenderer renderer;
+    public float horizontal;
+    public float vertical;
 
+    public Text infoText;
     void Start()
     {
+        Instance = this;
         rigidbody2D = GetComponent<Rigidbody2D>();
         renderer = GetComponent<SpriteRenderer>();
     }
@@ -133,7 +136,7 @@ public class CharacterController : MonoBehaviour
             BetterJump();
             CheckIfGrounded();
             renderer.sprite = characters[0].sprite;
-            speed = 4.5f;
+            speed = 5.5f;
         }
 
         if (currentCharacter == "Elephant")
@@ -141,7 +144,7 @@ public class CharacterController : MonoBehaviour
             Move();
             CheckIfGrounded();
             renderer.sprite = characters[1].sprite;
-            speed = 1.5f;
+            speed = 2.5f;
         }
 
         if(currentCharacter == "Bird")
@@ -149,15 +152,13 @@ public class CharacterController : MonoBehaviour
             BirdMove();
             CheckIfGrounded();
             renderer.sprite = characters[2].sprite;
-            rigidbody2D.gravityScale = 3.5f;
-            speed = 2f;
+            rigidbody2D.gravityScale = 10f;
+            speed = 4f;
         }
         else
         {
             rigidbody2D.gravityScale = 1;
         }
-
-
 
 
 
@@ -233,6 +234,32 @@ public class CharacterController : MonoBehaviour
         currentCharacter = "Bird";
     }
 
+    int breakCount = 0;
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.tag == "Ground")
+        {
+            if (currentCharacter == "Elephant")
+            {
+                infoText.text = "Click 'S' button over and over.";
+                if (Input.GetKeyDown(KeyCode.S))
+                {
+                    breakCount++;
+                    if (breakCount == 3)
+                    {
+                        collision.gameObject.AddComponent<AddExplosionForGround>();
+                        Destroy(collision.gameObject, 5f);
+                        breakCount = 0;
+                        infoText.text = "";
+                    }
+                }
+            }
+            else
+            {
+                infoText.text = "";
+            }
+        }
+    }
 }
 
 
