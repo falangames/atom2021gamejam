@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c2701c2b724cd041ac02b6e03f8930c, type: 3}
   m_Name: Elephant Ability
   m_EditorClassIdentifier: 
-  aName: Bite
+  aName: Break
   aSprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   aBaseCoolDown: 1

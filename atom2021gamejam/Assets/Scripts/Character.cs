@@ -6,7 +6,7 @@ public abstract class Character : ScriptableObject
     public string characterName = "Default";
     public int startingHp = 100;
     public Sprite sprite;
-    public Animator animator;
+    public RuntimeAnimatorController animator;
 
     public bool isJump = true;
     public bool isFly = false;

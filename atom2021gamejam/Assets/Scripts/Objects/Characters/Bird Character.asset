@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: Bird
   startingHp: 100
-  sprite: {fileID: 21300000, guid: a0e44e5ef970cdf4abeaf7fd3c9630bd, type: 3}
-  animator: {fileID: 0}
+  sprite: {fileID: 21300000, guid: be08a2e26586eab4eaf1d687d84e3540, type: 3}
+  animator: {fileID: 9100000, guid: 1835d920db685114d85c6bcba83a3492, type: 2}
   isJump: 0
   isFly: 1
   isSwim: 0

@@ -32,6 +32,15 @@ public class GameManager : MonoBehaviour
             monkeyText.GetComponent<Text>().text = currCountdownValueMonkey.ToString();
             monkeyText.SetActive(true);
             monkeyButton.GetComponent<Image>().fillAmount = 0;
+
+            if (CharacterController.Instance.gameObject.transform.localScale.x < 0)
+            {
+                CharacterController.Instance.gameObject.transform.localScale = new Vector2(-3f, 3f);
+            }
+            else
+            {
+                CharacterController.Instance.gameObject.transform.localScale = new Vector2(3f, 3f);
+            }
         }
     }
     public IEnumerator StartCountdownMonkey(float countdownValueMonkey)
@@ -70,6 +79,16 @@ public class GameManager : MonoBehaviour
             elephantText.GetComponent<Text>().text = currCountdownValuElephant.ToString();
             elephantText.SetActive(true);
             elephantButton.GetComponent<Image>().fillAmount = 0;
+
+
+            if (CharacterController.Instance.gameObject.transform.localScale.x < 0)
+            {
+                CharacterController.Instance.gameObject.transform.localScale = new Vector2(-10, 10);
+            }
+            else
+            {
+                CharacterController.Instance.gameObject.transform.localScale = new Vector2(10, 10);
+            }
         }
     }
     public IEnumerator StartCountdownElephant(float countdownValueElephant)
@@ -108,6 +127,14 @@ public class GameManager : MonoBehaviour
             birdText.GetComponent<Text>().text = currCountdownValuBird.ToString();
             birdText.SetActive(true);
             birdButton.GetComponent<Image>().fillAmount = 0;
+            if (CharacterController.Instance.gameObject.transform.localScale.x < 0)
+            {
+                CharacterController.Instance.gameObject.transform.localScale = new Vector2(-2, 2);
+            }
+            else
+            {
+                CharacterController.Instance.gameObject.transform.localScale = new Vector2(2, 2);
+            }
         }
     }
     public IEnumerator StartCountdownBird(float countdownValueBird)
