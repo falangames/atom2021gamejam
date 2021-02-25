@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance;
+
     public Button monkeyButton;
     public Button elephantButton;
     public Button birdButton;
@@ -13,6 +15,13 @@ public class GameManager : MonoBehaviour
     public GameObject elephantText;
     public GameObject birdText;
 
+
+
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Update()
     {

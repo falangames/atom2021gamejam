@@ -2,103 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class CharacterController : MonoBehaviour
 {
-    /*[SerializeField, Tooltip("Max speed, in units per second, that the character moves.")]
-    float speed = 9;
-
-    [SerializeField, Tooltip("Acceleration while grounded.")]
-    float walkAcceleration = 75;
-
-    [SerializeField, Tooltip("Acceleration while in the air.")]
-    float airAcceleration = 30;
-
-    [SerializeField, Tooltip("Deceleration applied when character is grounded and not attempting to move.")]
-    float groundDeceleration = 70;
-
-    [SerializeField, Tooltip("Max height the character will jump regardless of gravity")]
-    float jumpHeight = 4;
-
-    private BoxCollider2D boxCollider;
-
-    private Vector2 velocity;
-
-
-    private string currentCharacter = "Monkey";
-
-    /// <summary>
-    /// Set to true when the character intersects a collider beneath
-    /// them in the previous frame.
-    /// </summary>
-    private bool grounded;
-
-    private void Awake()
-    {
-        boxCollider = GetComponent<BoxCollider2D>();
-    }
-
-    private void Update()
-    {
-        // Use GetAxisRaw to ensure our input is either 0, 1 or -1.
-        float moveInput = Input.GetAxisRaw("Horizontal");
-
-        if (grounded)
-        {
-            velocity.y = 0;
-
-            if (Input.GetButtonDown("Jump"))
-            {
-                // Calculate the velocity required to achieve the target jump height.
-                velocity.y = Mathf.Sqrt(2 * jumpHeight * Mathf.Abs(Physics2D.gravity.y));
-            }
-        }
-
-        float acceleration = grounded ? walkAcceleration : airAcceleration;
-        float deceleration = grounded ? groundDeceleration : 0;
-
-        if (moveInput != 0)
-        {
-            velocity.x = Mathf.MoveTowards(velocity.x, speed * moveInput, acceleration * Time.deltaTime);
-        }
-        else
-        {
-            velocity.x = Mathf.MoveTowards(velocity.x, 0, deceleration * Time.deltaTime);
-        }
-
-        velocity.y += Physics2D.gravity.y * Time.deltaTime;
-
-        transform.Translate(velocity * Time.deltaTime);
-
-        grounded = false;
-
-        // Retrieve all colliders we have intersected after velocity has been applied.
-        Collider2D[] hits = Physics2D.OverlapBoxAll(transform.position, boxCollider.size, 0);
-
-        foreach (Collider2D hit in hits)
-        {
-            // Ignore our own collider.
-            if (hit == boxCollider)
-                continue;
-
-            ColliderDistance2D colliderDistance = hit.Distance(boxCollider);
-
-            // Ensure that we are still overlapping this collider.
-            // The overlap may no longer exist due to another intersected collider
-            // pushing us out of this one.
-            if (colliderDistance.isOverlapped)
-            {
-                transform.Translate(colliderDistance.pointA - colliderDistance.pointB);
-
-                // If we intersect an object beneath us, set grounded to true. 
-                if (Vector2.Angle(colliderDistance.normal, Vector2.up) < 90 && velocity.y < 0)
-                {
-                    grounded = true;
-                }
-            }
-        }*/
-
     public static CharacterController Instance;
 
     public float speed;
@@ -139,16 +47,61 @@ public class CharacterController : MonoBehaviour
 
 
     public Slider canFlySlider;
+
+
+
+    public GameObject beginPanel;
+
+    public GameObject monkeyButton;
+    public GameObject birdButton;
+    public GameObject elephantButton;
+
+
+    public Text beginText;
+
+    public AudioSource throwBananaSound;
+
     void Start()
     {
         Instance = this;
         animatorController = GetComponent<Animator>();
         rigidbody2D = GetComponent<Rigidbody2D>();
         renderer = GetComponent<SpriteRenderer>();
+
+        StartCoroutine(ClearInfoTexts());
     }
+
+    bool messageShowElephant = false; 
+    bool messageShowBird = false;
 
     void Update()
     {
+        if (evolutionBar.value >= 0.2f)
+        {
+            monkeyButton.SetActive(true);
+            elephantButton.SetActive(true);
+
+            if (!messageShowElephant)
+            {
+                beginPanel.SetActive(true);
+                beginText.text = "Now i can evolve to an elephant.(TAB)";
+                //infoText.text = "Now i can evolve to an elephant.(TAB)";
+                messageShowElephant = true;
+            }
+        }
+        
+        if (evolutionBar.value >= 0.4f)
+        {
+            birdButton.SetActive(true);
+            if (!messageShowBird)
+            {
+                beginPanel.SetActive(true);
+                beginText.text = "Now i can evolve to a bird.(TAB)";
+                //infoText.text = "Now i can evolve to a bird.(TAB)";
+                messageShowBird = true;
+            }
+        }
+
         float h = Input.GetAxis("Horizontal");
         if (h > 0 && !facingRight)
         {
@@ -168,7 +121,11 @@ public class CharacterController : MonoBehaviour
         {
 
             if (Input.GetMouseButtonDown(0))
+            {
                 ThrowBanana(50f);
+                throwBananaSound.mute = false;
+                throwBananaSound.Play();
+            }
 
             Move();
             Jump();
@@ -222,7 +179,7 @@ public class CharacterController : MonoBehaviour
                 colliderElephant.size = new Vector2(0.45f, 0.25f);
             }
 
-            if (Input.GetKeyDown(KeyCode.S))
+            if (Input.GetKey(KeyCode.S))
             {
                 animatorController.SetBool("break", true);
             }
@@ -309,6 +266,8 @@ public class CharacterController : MonoBehaviour
         banan = Instantiate(banana, muzzle.position, Quaternion.identity);
         banan.GetComponent<Rigidbody2D>().AddForce(muzzle.transform.forward * throwSpeed);
         banan.transform.Rotate(Vector3.one * 4 * Time.deltaTime);
+        
+        Destroy(banan.gameObject, 3);
     }
 
     void Flip()
@@ -341,16 +300,7 @@ public class CharacterController : MonoBehaviour
 
         if (currentCharacter == "Monkey")
         {
-            if (x != 0)
-            {
-                animatorController.SetBool("walk", true);
-            }
-            else
-            {
-                animatorController.SetBool("walk", false);
-            }
-
-            /*if (x != 0 && !animatorController.GetCurrentAnimatorStateInfo(0).IsName("jump"))
+            /*if (x != 0)
             {
                 animatorController.SetBool("walk", true);
             }
@@ -358,12 +308,29 @@ public class CharacterController : MonoBehaviour
             {
                 animatorController.SetBool("walk", false);
             }*/
+
+            if (x != 0 && !animatorController.GetCurrentAnimatorStateInfo(0).IsName("jump"))
+            {
+                animatorController.SetBool("walk", true);
+            }
+            else
+            {
+                animatorController.SetBool("walk", false);
+            }
         }
     }
     void BirdMove()
     {
-        horizontal = Input.GetAxisRaw("Horizontal");
-        vertical = Input.GetAxisRaw("Vertical");
+        if (canFlySlider.value != 0)
+        {
+            vertical = Input.GetAxisRaw("Vertical");
+            horizontal = Input.GetAxisRaw("Horizontal");
+        }
+        else
+        {
+            vertical = 0;
+            horizontal = 0;
+        }
 
         rigidbody2D.velocity = new Vector2(horizontal * speed, vertical * speed);
     }
@@ -414,18 +381,41 @@ public class CharacterController : MonoBehaviour
         if (collision.tag == "EvolutionPoint")
         {
             evolutionBar.value += evolutionPoint;
-            Destroy(collision.gameObject, 2f);
+            Destroy(collision.gameObject, 1f);
+        }
+
+        if (collision.tag == "Died")
+        {
+            SceneManager.LoadScene("MainScene");
+        }
+
+        if (collision.tag == "Over")
+        {
+            StartCoroutine(OverGame());
         }
     }
 
+    IEnumerator OverGame()
+    {
+        infoText.text = "Congratulations, you finished the game. Please wait 5 seconds.";
+        yield return new WaitForSeconds(5f);
+        SceneManager.LoadScene("InfoScene");
+    }
+
+
     private void OnTriggerStay2D(Collider2D collision)
     {
+        if (collision.tag == "Over")
+        {
+            StartCoroutine(OverGame());
+        }
+
         if (currentCharacter == "Elephant")
         {
             if (collision.tag == "Ground")
             {
                 infoText.text = "Click 'S' button over and over!";
-                if (Input.GetKeyDown(KeyCode.S))
+                if (Input.GetKey(KeyCode.S))
                 {
                     breakCount++;
                     if (breakCount == 3)
@@ -437,132 +427,28 @@ public class CharacterController : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            infoText.text = "";
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
         infoText.text = "";
     }
-}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*public void OnClick_MonkeyButton()
-{
-    currentCharacter = "Monkey";
-}
-public void OnClick_ElephantButton()
-{
-    currentCharacter = "Elephant";
-}
-public void OnClick_BirdButton()
-{
-    currentCharacter = "Bird";
-}*/
-
-/*public float speed = 100.0f;
-public float jumpForce = 350.0f;
-public Transform bottomTransform;
-
-private Rigidbody2D body;
-//private Animator animator;
-private SpriteRenderer spriteRenderer;
-
-private Vector2 currentVelocity;
-private float previousPositionY;
-
-private bool isOnGround;
-
-
-// Start is called before the first frame update
-void Start()
-{
-    body = GetComponent<Rigidbody2D>();
-    //animator = GetComponent<Animator>();
-    spriteRenderer = GetComponent<SpriteRenderer>();
-}
-
-// Update is called once per frame
-void Update()
-{
-
-}
-
-private void FixedUpdate()
-{
-    Move();
-    HandleCollisions();
-    previousPositionY = transform.position.y;
-}
-
-private void Move()
-{
-    float velocity = Input.GetAxis("Horizontal") * speed;
-    bool isJumping = Input.GetKey(KeyCode.Space);
-
-    //animator.SetFloat("Speed", Mathf.Abs(velocity));
-    // Horizontal Movement
-    body.velocity = Vector2.SmoothDamp(body.velocity, new Vector2(velocity, body.velocity.y), ref currentVelocity, 0.02f);
-
-    // Initiate Jump
-    if (isOnGround && isJumping)
+    public void OnClick_BeginPanelExit()
     {
-        //animator.SetBool("IsJumping", true);
-        isOnGround = false;
-        body.AddForce(new Vector2(0, jumpForce));
+        beginPanel.SetActive(false);
     }
 
-    // Cancel Jump
-    if (!isOnGround && !isJumping && body.velocity.y > 0.01f)
+    IEnumerator ClearInfoTexts()
     {
-        body.velocity = new Vector2(body.velocity.x, body.velocity.y);
-    }
-
-    if (velocity < 0) spriteRenderer.flipX = true;
-    else if (velocity > 0)
-        spriteRenderer.flipX = false;
-}
-
-private void HandleCollisions()
-{
-    bool wasOnGround = isOnGround;
-    isOnGround = false;
-
-    Collider2D[] colliders = Physics2D.OverlapCircleAll(bottomTransform.position, 0.6f);
-    foreach (var collider in colliders)
-    {
-        if (collider.gameObject != gameObject)
+        while (true)
         {
-            isOnGround = true;
-            if (!wasOnGround && previousPositionY > transform.position.y)
-                HandleLanding();
+            yield return new WaitForSeconds(4f);
+            infoText.text = "";
         }
     }
 }
-
-private void HandleLanding()
-{
-    //animator.SetBool("IsJumping", false);
-}*/
-

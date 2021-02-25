@@ -18,6 +18,6 @@ public class Banana : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Destroy(gameObject, 10);
+        //Destroy(gameObject, 10);
     }
 }

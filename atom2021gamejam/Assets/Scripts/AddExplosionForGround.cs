@@ -5,7 +5,7 @@ using UnityEngine;
 //[RequireComponent(typeof(Explodable))]
 public class AddExplosionForGround : MonoBehaviour
 {
-	private Explodable _explodable;
+	/*private Explodable _explodable;
 
 	private PolygonCollider2D polygonCollider2D;
 	void Start()
@@ -26,7 +26,7 @@ public class AddExplosionForGround : MonoBehaviour
         {
 
         }
-	}
+	}*/
 
 
 	/*public float minforce = 150f;
